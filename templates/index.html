@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            color: #333;
+        }
+
+        /* Container Styles */
+        .autocomplete-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .autocomplete-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #1c3d5c;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #4a4a4a;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #dde6ed;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 16px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #003d7a);
+        }
+
+        /* Suggestions Dropdown Styles */
+        #suggestions {
+            border: 1px solid #dde6ed;
+            background-color: #fff;
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: max-height 0.3s ease;
+        }
+
+        #suggestions div {
+            padding: 16px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #suggestions div:hover {
+            background-color: #f0f4f8;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="autocomplete-container">
+        <h1>Dictionary Search</h1>
+        <form method="POST" action="/search">
+            <label for="word">Enter a word:</label>
+            <input type="text" id="word" name="word" autocomplete="off" required oninput="fetchSuggestions()">
+            <button type="submit">Search</button>
+
+            <!-- Suggestions dropdown -->
+            <div id="suggestions"></div>
+        </form>
+    </div>
+
+    <script>
+        // Fetch autocomplete suggestions
+        async function fetchSuggestions() {
+            const wordInput = document.getElementById('word');
+            const query = wordInput.value;
+
+            if (query.length < 2) {
+                document.getElementById('suggestions').style.display = 'none';
+                return;
+            }
+
+            const response = await fetch(`/autocomplete?prefix=${query}`);
+            const suggestions = await response.json();
+            displaySuggestions(suggestions);
+        }
+
+        // Display the suggestions in a dropdown
+        function displaySuggestions(suggestions) {
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.innerHTML = '';
+
+            if (suggestions.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            suggestionsBox.style.display = 'block';
+
+            suggestions.forEach(suggestion => {
+                const suggestionDiv = document.createElement('div');
+                suggestionDiv.textContent = suggestion;
+
+                suggestionDiv.onclick = () => {
+                    document.getElementById('word').value = suggestion;
+                    suggestionsBox.style.display = 'none';
+                };
+
+                suggestionsBox.appendChild(suggestionDiv);
+            });
+        }
+    </script>
+</body>
+</html>
