@@ -7,6 +7,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+            @keyframes blink {
+        0% { color: red; }
+        50% { color: transparent; }
+        100% { color: red; }
+    }
+
+    .blinking {
+        animation: blink 2s infinite;
+    }
+
+    .green {
+        color: green;
+    }
         /* General Styles */
         * {
             box-sizing: border-box;
@@ -14,7 +27,6 @@
             padding: 0;
             font-family: 'Poppins', sans-serif;
         }
-
         body {
             display: flex;
             flex-direction: column;
@@ -24,8 +36,6 @@
             background: linear-gradient(135deg, #4a90e2, #50e3c2);
             color: #333;
         }
-
-        /* Container Styles */
         .results-container {
             background-color: #fff;
             padding: 40px;
@@ -35,30 +45,29 @@
             max-width: 600px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .results-container:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
-
         h1 {
             font-size: 2.2rem;
             margin-bottom: 30px;
             color: #1c3d5c;
             font-weight: 700;
         }
-
         p {
             font-size: 1.1rem;
             margin-bottom: 20px;
             color: #4a4a4a;
         }
-
-        strong {
-            font-weight: 600;
-            color: #333;
+        .definition-container {
+            max-height: 200px; /* Limit the height */
+            overflow-y: auto; /* Add scrollbar for overflow content */
+            padding: 10px;
+            border: 1px solid #dde6ed;
+            border-radius: 8px;
+            background-color: #f9f9f9;
         }
-
         a {
             display: inline-block;
             background: linear-gradient(135deg, #007bff, #0056b3);
@@ -72,7 +81,6 @@
             transition: background 0.3s ease;
             margin-top: 20px;
         }
-
         a:hover {
             background: linear-gradient(135deg, #0056b3, #003d7a);
         }
@@ -85,10 +93,15 @@
         
         {% if definition %}
         <p><strong>Definition:</strong></p>
-        <p>{{ definition }}</p>
+        <div class="definition-container">
+            <p>{{ definition }}</p>
+        </div>
         {% elif closest_word %}
-        <p>The word <strong>{{ query }}</strong> was not found. Did you mean <strong>{{ closest_word }}</strong>?</p>
-        <p><strong>Definition of {{ closest_word }}:</strong> {{ closest_definition }}</p>
+        <p>The word <strong class="blinking">{{ query }}</strong> was not found. Did you mean <strong class="green">{{ closest_word }}</strong>?</p>
+        <p><strong>Definition of {{ closest_word }}:</strong></p>
+        <div class="definition-container">
+            <p>{{ closest_definition }}</p>
+        </div>
         {% else %}
         <p><strong>Definition:</strong> Word not found</p>
         {% endif %}

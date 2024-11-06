@@ -79,12 +79,19 @@ def levenshtein_distance(word1, word2):
     return dp[-1][-1]
 
 # Function to find the closest word using Levenshtein Distance
-def find_closest_word(trie, word):
-    all_words = trie.autocomplete("")  # Get all words in the Trie
+def find_closest_word(trie, word, max_candidates=100):
+    # Get a subset of words based on the prefix
+    prefix = word[:2]  # Adjust the prefix length as needed
+    candidate_words = trie.autocomplete(prefix)
+    
+    # If the number of candidates is too large, limit it
+    if len(candidate_words) > max_candidates:
+        candidate_words = candidate_words[:max_candidates]
+    
     closest_word = None
     min_distance = float('inf')
 
-    for w in all_words:
+    for w in candidate_words:
         distance = levenshtein_distance(word, w)
         if distance < min_distance:
             min_distance = distance
