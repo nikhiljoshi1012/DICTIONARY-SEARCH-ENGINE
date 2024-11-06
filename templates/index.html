@@ -113,6 +113,30 @@
             background-color: #f0f4f8;
             color: #007bff;
         }
+
+        /* Most Frequent Words Styles */
+        .most-frequent-container {
+            margin-top: 20px;
+        }
+
+        .most-frequent-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #1c3d5c;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .most-frequent-container ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .most-frequent-container li {
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -126,6 +150,12 @@
             <!-- Suggestions dropdown -->
             <div id="suggestions"></div>
         </form>
+
+        <!-- Most Frequent Words Section -->
+        <div class="most-frequent-container">
+            <h2>Most Frequent Words</h2>
+            <ul id="most-frequent-words"></ul>
+        </div>
     </div>
 
     <script>
@@ -168,6 +198,27 @@
                 suggestionsBox.appendChild(suggestionDiv);
             });
         }
+
+        // Fetch most frequent words
+        async function fetchMostFrequentWords() {
+            const response = await fetch('/most_frequent?k=5');
+            const mostFrequentWords = await response.json();
+            displayMostFrequentWords(mostFrequentWords);
+        }
+
+        // Display the most frequent words
+        function displayMostFrequentWords(words) {
+            const mostFrequentWordsList = document.getElementById('most-frequent-words');
+            mostFrequentWordsList.innerHTML = '';
+            words.forEach(word => {
+                const listItem = document.createElement('li');
+                listItem.textContent = word;
+                mostFrequentWordsList.appendChild(listItem);
+            });
+        }
+
+        // Fetch most frequent words on page load
+        document.addEventListener('DOMContentLoaded', fetchMostFrequentWords);
     </script>
 </body>
 </html>
