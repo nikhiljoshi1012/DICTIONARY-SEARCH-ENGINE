@@ -61,6 +61,37 @@ class Trie:
         # Get the top k most frequently searched words
         return heapq.nsmallest(k, self.max_heap)
 
+# Levenshtein Distance algorithm to find the closest match for misspellings
+def levenshtein_distance(word1, word2):
+    dp = [[0] * (len(word2) + 1) for _ in range(len(word1) + 1)]
+
+    for i in range(len(word1) + 1):
+        for j in range(len(word2) + 1):
+            if i == 0:
+                dp[i][j] = j
+            elif j == 0:
+                dp[i][j] = i
+            elif word1[i - 1] == word2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+
+    return dp[-1][-1]
+
+# Function to find the closest word using Levenshtein Distance
+def find_closest_word(trie, word):
+    all_words = trie.autocomplete("")  # Get all words in the Trie
+    closest_word = None
+    min_distance = float('inf')
+
+    for w in all_words:
+        distance = levenshtein_distance(word, w)
+        if distance < min_distance:
+            min_distance = distance
+            closest_word = w
+
+    return closest_word
+
 # Function to load words from the database into the Trie
 def load_words_into_trie():
     trie = Trie()
@@ -99,6 +130,10 @@ def search():
     if definition:
         return render_template('results.html', query=word, definition=definition)
     else:
+        closest_word = find_closest_word(trie, word)
+        if closest_word:
+            closest_definition = trie.search(closest_word)
+            return render_template('results.html', query=word, definition=None, closest_word=closest_word, closest_definition=closest_definition)
         return render_template('results.html', query=word, definition='Word not found')
 
 # Autocomplete endpoint

@@ -86,6 +86,9 @@
         {% if definition %}
         <p><strong>Definition:</strong></p>
         <p>{{ definition }}</p>
+        {% elif closest_word %}
+        <p>The word <strong>{{ query }}</strong> was not found. Did you mean <strong>{{ closest_word }}</strong>?</p>
+        <p><strong>Definition of {{ closest_word }}:</strong> {{ closest_definition }}</p>
         {% else %}
         <p><strong>Definition:</strong> Word not found</p>
         {% endif %}
