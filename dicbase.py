@@ -27,7 +27,7 @@ def save_to_database(data, database_name):
     conn.commit()
     conn.close()
 
-# Example usage
+#  usage
 if __name__ == "__main__":
     json_file = 'dictionary2.json'
     database_name = 'dictionary.db'

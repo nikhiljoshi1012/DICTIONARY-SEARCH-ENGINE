@@ -7,8 +7,8 @@ app = Flask(__name__)
 # Trie data structure for autocomplete
 class TrieNode:
     def __init__(self):
-        self.children = {}
-        self.is_end_of_word = False
+        self.children = {} #Dictionary to store child nodes.
+        self.is_end_of_word = False #Boolean to mark the end of a word
         self.definition = None
         self.frequency = 0  # Add frequency counter
 
@@ -17,6 +17,7 @@ class Trie:
         self.root = TrieNode()
         self.max_heap = []  # Max-heap to store the most frequently searched words
 
+#Adds word and its definition to the trie
     def insert(self, word, definition):
         node = self.root
         for char in word:
@@ -59,7 +60,7 @@ class Trie:
 
     def get_most_frequent_words(self, k):
         # Get the top k most frequently searched words
-        return heapq.nsmallest(k, self.max_heap)
+        return heapq.nsmallest(k, self.max_heap) #max-heap
 
 # Levenshtein Distance algorithm to find the closest match for misspellings
 def levenshtein_distance(word1, word2):
@@ -81,7 +82,7 @@ def levenshtein_distance(word1, word2):
 # Function to find the closest word using Levenshtein Distance
 def find_closest_word(trie, word, max_candidates=100):
     # Get a subset of words based on the prefix
-    prefix = word[:2]  # Adjust the prefix length as needed
+    prefix = word[:4]  # Adjust the prefix length as needed
     candidate_words = trie.autocomplete(prefix)
     
     # If the number of candidates is too large, limit it
