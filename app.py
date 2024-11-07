@@ -159,4 +159,4 @@ def most_frequent():
     return jsonify([word for _, word in most_frequent_words])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False,host='0.0.0.0')
