@@ -88,25 +88,26 @@
 </head>
 <body>
     <div class="results-container">
-        <h1>Dictionary Search Results</h1>
-        <p><strong>Word:</strong> {{ query }}</p>
-        
-        {% if definition %}
-        <p><strong>Definition:</strong></p>
-        <div class="definition-container">
-            <p>{{ definition }}</p>
-        </div>
-        {% elif closest_word %}
-        <p>The word <strong class="blinking">{{ query }}</strong> was not found. Did you mean <strong class="green">{{ closest_word }}</strong>?</p>
-        <p><strong>Definition of {{ closest_word }}:</strong></p>
-        <div class="definition-container">
-            <p>{{ closest_definition }}</p>
-        </div>
-        {% else %}
-        <p><strong>Definition:</strong> Word not found</p>
-        {% endif %}
-        
-        <a href="/">Back to Search</a>
+    <h1>Dictionary Search Results</h1>
+    <p><strong>Word:</strong> {{ query }}</p>
+    
+    {% if definition %}
+    <p><strong>Definition:</strong></p>
+    <div class="definition-container">
+        <p>{{ definition }}</p>
     </div>
+    {% elif closest_word %}
+    <p>The word <strong class="blinking">{{ query }}</strong> was not found. Did you mean <strong class="green">{{ closest_word }}</strong>?</p>
+    <p><strong>Definition of {{ closest_word }}:</strong></p>
+    <div class="definition-container">
+        <p>{{ closest_definition }}</p>
+    </div>
+    {% else %}
+    <p><strong>Definition:</strong> Word not found</p>
+    {% endif %}
+    
+    <p><strong>Search Time:</strong> {{ elapsed_time | round(2) }} ms</p>
+    <a href="/">Back to Search</a>
+</div>
 </body>
 </html>

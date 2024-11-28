@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 import heapq
-
+import time 
 app = Flask(__name__)
 
 # Trie data structure for autocomplete
@@ -134,16 +134,20 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
     word = request.form.get('word').lower()
+    start_time = time.perf_counter()  # Start high-resolution timing
+
     definition = trie.search(word)
+
+    elapsed_time = (time.perf_counter() - start_time) * 1000  # Elapsed time in milliseconds
+
     if definition:
-        return render_template('results.html', query=word, definition=definition)
+        return render_template('results.html', query=word, definition=definition, elapsed_time=elapsed_time)
     else:
         closest_word = find_closest_word(trie, word)
         if closest_word:
             closest_definition = trie.search(closest_word)
-            return render_template('results.html', query=word, definition=None, closest_word=closest_word, closest_definition=closest_definition)
-        return render_template('results.html', query=word, definition='Word not found')
-
+            return render_template('results.html', query=word, definition=None, closest_word=closest_word, closest_definition=closest_definition, elapsed_time=elapsed_time)
+        return render_template('results.html', query=word, definition='Word not found', elapsed_time=elapsed_time)
 # Autocomplete endpoint
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
@@ -159,4 +163,4 @@ def most_frequent():
     return jsonify([word for _, word in most_frequent_words])
 
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')
